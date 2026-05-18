@@ -1,3 +1,5 @@
+import panels.SystemInfo;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -13,7 +15,7 @@ public class MainFrame extends JFrame {
 
         buildUI();
 
-        setVisible(true);
+//      setVisible(true); main 함수에서 호출하도록 변경
     }
 
     private void buildUI() {
@@ -27,9 +29,9 @@ public class MainFrame extends JFrame {
         JPanel sidebar = buildSidebar();
 
         // 오른쪽 컨텐츠
-        JPanel content = new JPanel();
+        // 새 창(JFrame)을 띄워서 각 기능들을 구현보다 CardLayout(패널만 교체)로 구현
+        JPanel content = new JPanel(new CardLayout());
         content.setBackground(new Color(255, 255, 255));
-
         root.add(topBar, BorderLayout.NORTH);
         root.add(sidebar, BorderLayout.WEST);
         root.add(content, BorderLayout.CENTER);
@@ -47,7 +49,7 @@ public class MainFrame extends JFrame {
         programNameLabel.setForeground(new Color(255, 255, 255));
 
         // 학번 - 이름 - 학수번호 (우측)
-        JPanel infoPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        JPanel infoPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 13));
         infoPanel.setBackground(new Color(40, 40, 40));
 
         JLabel idLabel = new JLabel("12245625");
