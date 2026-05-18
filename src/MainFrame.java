@@ -6,6 +6,9 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class MainFrame extends JFrame {
+    private CardLayout cardLayout;
+    private JPanel content;
+
     public MainFrame() {
         setTitle("GoClean with Java");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -30,8 +33,20 @@ public class MainFrame extends JFrame {
 
         // 오른쪽 컨텐츠
         // 새 창(JFrame)을 띄워서 각 기능들을 구현보다 CardLayout(패널만 교체)로 구현
-        JPanel content = new JPanel(new CardLayout());
-        content.setBackground(new Color(255, 255, 255));
+        cardLayout = new CardLayout();
+        content = new JPanel(cardLayout);
+        content.setBackground(Color.WHITE);
+
+        // 빈 화면 (시작 화면)
+        JPanel emptyPanel = new JPanel();
+        emptyPanel.setBackground(Color.WHITE);
+        content.add(emptyPanel, "empty");
+
+        // 각 기능 패널들 등록
+        content.add(new SystemInfo(), "시스템 정보");
+
+        cardLayout.show(content, "empty");
+
         root.add(topBar, BorderLayout.NORTH);
         root.add(sidebar, BorderLayout.WEST);
         root.add(content, BorderLayout.CENTER);
@@ -174,6 +189,8 @@ public class MainFrame extends JFrame {
                 btn.setBackground(new Color(245, 246, 250));
             }
         });
+
+        btn.addActionListener(e -> cardLayout.show(content, text));
 
         return btn;
     }
