@@ -46,6 +46,7 @@ public abstract class BasePanel extends JPanel {
 
         JScrollPane contentScroll = new JScrollPane(contentPanel);
         contentScroll.setBorder(null);
+        contentScroll.getVerticalScrollBar().setUnitIncrement(8);
 
         // 하단 로그창
         logArea = new JTextArea(4, 0);

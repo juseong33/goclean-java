@@ -1,4 +1,4 @@
-import panels.SystemInfo;
+import panels.system.SystemInfo;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -151,8 +151,8 @@ public class MainFrame extends JFrame {
     }
 
     // 메뉴 버튼 (클릭 됨)
-    // 텍스트에 이모지랑 글씨를 같이 넣으면 폰트를 하나로밖에 못 써서 이모지가 깨지는 현상 있음
-    // 이모지는 Segoe UI Emoji 폰트를 따로 지정하여 이모지, 텍스트 라벨 분리한 뒤 btn에 결합
+    //이모지와 텍스트를 하나의 JLabel에 넣으면 폰트가 하나만 적용되어 이모지가 깨지는 문제가 있음
+    //이모지용 JLabel (Segoe UI Emoji 폰트) + 텍스트용 JLabel (맑은 고딕 폰트)를 분리한 뒤 JButton에 결합하여 해결
     private JButton makeMenuButton(String emoji, String text) {
         JButton btn = new JButton();
         btn.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
