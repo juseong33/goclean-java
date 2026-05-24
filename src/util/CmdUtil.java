@@ -1,6 +1,7 @@
 package util;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 //Windows 명령어를 처리하는 유틸 (ProcessBuilder 이용)
@@ -8,11 +9,11 @@ public class CmdUtil {
     public static String run(String command) {
         StringBuilder sb = new StringBuilder();
         try {
-            ProcessBuilder pb = new ProcessBuilder("cmd", "/c", command);
-            pb.redirectErrorStream(true);
+            ProcessBuilder pb = new ProcessBuilder("powershell", "-NoProfile", "-Command", command);    // wmic은 Windows11부터는 지원하지 않는다고 해서 powershell로 수정
+            pb.redirectErrorStream(true);   // stdout과 stderr를 하나의 스트림으로 합쳐서 읽기
             Process process = pb.start();
             BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(process.getInputStream()));
+                    new InputStreamReader(process.getInputStream(), "MS949"));
             String line;
             while ((line = reader.readLine()) != null) {
                 sb.append(line).append("\n");
