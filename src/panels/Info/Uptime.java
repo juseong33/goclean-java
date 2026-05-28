@@ -204,9 +204,10 @@ public class Uptime extends BasePanel {
             @Override
             protected void done() {
                 // 날짜에 해당하는 값(ms단위)을 가져와서 가공한 뒤 각 라벨에 값 세팅
-                todayLabel.setText(formatUsageTime(dailyUsage.get(today)));
-                yesterdayLabel.setText(formatUsageTime(dailyUsage.get(yesterday)));
-                dayBeforeLabel.setText(formatUsageTime(dailyUsage.get(dayBefore)));
+                // 260528 - by juseong33: 노트북 환경에서 테스트 해봤는데, NPE 발생해서 수정 (powershell 명령어가 잘못된듯 ?)
+                todayLabel.setText(formatUsageTime(dailyUsage.getOrDefault(today, 0L)));
+                yesterdayLabel.setText(formatUsageTime(dailyUsage.getOrDefault(yesterday, 0L)));
+                dayBeforeLabel.setText(formatUsageTime(dailyUsage.getOrDefault(dayBefore, 0L)));
 
                 log("▶ 완료");
             }
