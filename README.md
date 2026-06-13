@@ -25,8 +25,7 @@
 | 개인정보 삭제 | ✅ |
 | 프로그램 삭제 | - |
 | 종료 타이머 | - |
-| DNS 변조 체크 | - |
-| DNS 변조 초기화 | - |
+| DNS 변조 체크 | ✅ |
 | CPU/그래픽카드 온도 | ❌ |
 
 ## 기능별 사용 명령어
@@ -94,6 +93,21 @@
 - 파일 탐색기(`JFileChooser`)에서 다중 선택한 파일을 목록에 추가
 - 체크된 항목만 백그라운드(`SwingWorker`)에서 순차 강제 삭제
 - 삭제 후 파일 존재 여부를 다시 확인하여 성공/실패를 로그에 출력, 성공한 항목은 목록에서 제거
+
+</details>
+
+<details>
+<summary>DNS 변조 체크</summary>
+
+| 항목 | 명령어 |
+|---|---|
+| 기본/보조 DNS 조회 | `(Get-DnsClientServerAddress -AddressFamily IPv4 \| Where-Object { $_.ServerAddresses.Count -gt 0 } \| Select-Object -First 1).ServerAddresses` |
+| 주요 사이트 IP 조회 (현재 DNS) | `(Resolve-DnsName 도메인 -Type A -ErrorAction SilentlyContinue).IPAddress` |
+| 주요 사이트 IP 조회 (공용 DNS) | `(Resolve-DnsName 도메인 -Type A -Server 8.8.8.8 -ErrorAction SilentlyContinue).IPAddress` |
+
+- 국민은행(`www.kbstar.com`), 우리은행(`www.wooribank.com`)의 IP를 현재 DNS와 공용 DNS(8.8.8.8) 양쪽에서 조회
+- 두 결과에 겹치는 IP가 하나라도 있으면 정상연결, 없으면 변조 의심, 조회 실패 시 연결실패로 표시
+- 접속 환경에 따라 정상이어도 변조 의심으로 표시될 수 있음을 화면에 안내 문구로 표시
 
 </details>
 
