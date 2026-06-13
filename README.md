@@ -21,7 +21,7 @@
 | 동영상 파일 찾기 | - |
 | 컴퓨터 사용시간 체크 | ✅ |
 | 블루스크린 | - |
-| 파일 강제 삭제 | - |
+| 파일 강제 삭제 | ✅ |
 | 개인정보 삭제 | ✅ |
 | 프로그램 삭제 | - |
 | 종료 타이머 | - |
@@ -81,6 +81,19 @@
 
 - 선택한 항목만 백그라운드(`SwingWorker`)에서 순차 삭제 후 로그에 결과 출력
 - 모든 명령어에 `-ErrorAction SilentlyContinue` 적용 (해당 항목이 없어도 오류 없이 진행)
+
+</details>
+
+<details>
+<summary>파일 강제 삭제</summary>
+
+| 항목 | 명령어 |
+|---|---|
+| 파일 강제 삭제 | `Remove-Item -LiteralPath '경로' -Force -Recurse -ErrorAction SilentlyContinue` |
+
+- 파일 탐색기(`JFileChooser`)에서 다중 선택한 파일을 목록에 추가
+- 체크된 항목만 백그라운드(`SwingWorker`)에서 순차 강제 삭제
+- 삭제 후 파일 존재 여부를 다시 확인하여 성공/실패를 로그에 출력, 성공한 항목은 목록에서 제거
 
 </details>
 
