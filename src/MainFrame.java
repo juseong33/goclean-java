@@ -111,7 +111,6 @@ public class MainFrame extends JFrame {
 
         // 청소
         sidebar.add(makeCategoryLabel("  청소"));
-        sidebar.add(makeMenuButton("🗑️", "임시파일 삭제"));
         sidebar.add(makeMenuButton("🔒", "개인정보 삭제"));
         sidebar.add(makeMenuButton("❌", "파일 강제 삭제"));
 
