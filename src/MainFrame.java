@@ -1,7 +1,6 @@
-
 import panels.Info.Uptime;
 import panels.system.SystemInfo;
-import panels.clean.PrivacyDelete;
+import panels.clean.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -49,6 +48,7 @@ public class MainFrame extends JFrame {
         content.add(new SystemInfo(), "시스템 정보");
         content.add(new Uptime(), "컴퓨터 사용시간");
         content.add(new PrivacyDelete(), "개인정보 삭제");
+        content.add(new ForceDelete(), "파일 강제 삭제");
         cardLayout.show(content, "empty");
 
         root.add(topBar, BorderLayout.NORTH);
