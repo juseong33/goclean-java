@@ -1,4 +1,5 @@
 import panels.Info.Uptime;
+import panels.network.DnsCheck;
 import panels.system.SystemInfo;
 import panels.clean.*;
 
@@ -49,6 +50,7 @@ public class MainFrame extends JFrame {
         content.add(new Uptime(), "컴퓨터 사용시간");
         content.add(new PrivacyDelete(), "개인정보 삭제");
         content.add(new ForceDelete(), "파일 강제 삭제");
+        content.add(new DnsCheck(), "DNS 변조 체크");
         cardLayout.show(content, "empty");
 
         root.add(topBar, BorderLayout.NORTH);
@@ -127,7 +129,7 @@ public class MainFrame extends JFrame {
 
         // 네트워크
         sidebar.add(makeCategoryLabel("  네트워크"));
-        sidebar.add(makeMenuButton("🌐", "DNS 체크 / 초기화"));
+        sidebar.add(makeMenuButton("🌐", "DNS 변조 체크"));
 
         sidebar.add(Box.createVerticalStrut(8));
 
