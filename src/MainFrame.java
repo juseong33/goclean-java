@@ -1,5 +1,5 @@
 import panels.Info.Uptime;
-import panels.etc.Shutdown;
+import panels.etc.*;
 import panels.network.DnsCheck;
 import panels.system.SystemInfo;
 import panels.clean.*;
@@ -53,6 +53,7 @@ public class MainFrame extends JFrame {
         content.add(new ForceDelete(), "파일 강제 삭제");
         content.add(new DnsCheck(), "DNS 변조 체크");
         content.add(new Shutdown(), "종료 타이머");
+        content.add(new VideoFinder(), "동영상 파일 찾기");
         cardLayout.show(content, "empty");
 
         root.add(topBar, BorderLayout.NORTH);
