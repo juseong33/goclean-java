@@ -1,7 +1,7 @@
 import panels.Info.*;
 import panels.etc.*;
 import panels.network.DnsCheck;
-import panels.system.SystemInfo;
+import panels.system.*;
 import panels.clean.*;
 
 import javax.swing.*;
@@ -55,6 +55,7 @@ public class MainFrame extends JFrame {
         content.add(new Shutdown(), "종료 타이머");
         content.add(new VideoFinder(), "동영상 파일 찾기");
         content.add(new BlueScreen(), "블루스크린");
+        content.add(new ProcessInit(), "프로세스 관리");
         cardLayout.show(content, "empty");
 
         root.add(topBar, BorderLayout.NORTH);
