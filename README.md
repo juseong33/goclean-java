@@ -13,6 +13,7 @@
 | 기능           | 상태 |
 |--------------|--|
 | 서비스 관리       | - |
+| 프로세스 관리      | ✅ |
 | 시작 프로그램 관리   | - |
 | 작업 스케줄러 관리   | - |
 | 하드디스크 상태 점검  | - |
@@ -155,6 +156,22 @@
 - 추출한 코드를 미리 정의된 표(버그 체크 문자열, 추정 원인)와 매칭하여 테이블에 표시 (발생 시간, 버그 체크 문자열, 버그 코드, 원인(추정))
 - 매칭되는 코드가 없으면 "알 수 없음"으로 표시
 - 하단에 블루스크린 발생 횟수 표시
+
+</details>
+
+<details>
+<summary>프로세스 관리</summary>
+
+| 항목 | 명령어 |
+|---|---|
+| CPU/메모리/프로세스 수 조회 | `(Get-CimInstance Win32_PerfFormattedData_PerfOS_Processor \| Where-Object {$_.Name -eq '_Total'}).PercentProcessorTime` / `Get-CimInstance Win32_OperatingSystem` / `(Get-Process).Count` |
+| 프로세스 종료 | `Get-Process \| Where-Object { $_.ProcessName -notin @(화이트리스트) } \| ForEach-Object { Stop-Process -Id $_.Id -Force -ErrorAction SilentlyContinue }` |
+
+- CPU 사용률, 실제 메모리 사용률, 실행 중인 프로세스 수를 1초마다 갱신 (`javax.swing.Timer` + `SwingWorker`)
+- "윈도우 프로세스 초기화" 버튼 클릭 시 확인 팝업 후, 기본 프로세스/백신/메신저를 제외한 모든 프로세스를 강제 종료
+- 본인 프로세스(자바 앱)와 명령어를 실행 중인 `powershell` 자신은 항상 제외
+- 종료 후 종료된 프로세스 수와 소요 시간을 로그에 표시
+- "예외처리 방법" 버튼을 누르면 종료 대상에서 제외되는 기본/예외 프로세스 목록을 확인 가능
 
 </details>
 
