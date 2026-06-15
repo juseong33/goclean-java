@@ -1,4 +1,4 @@
-import panels.Info.Uptime;
+import panels.Info.*;
 import panels.etc.*;
 import panels.network.DnsCheck;
 import panels.system.SystemInfo;
@@ -54,6 +54,7 @@ public class MainFrame extends JFrame {
         content.add(new DnsCheck(), "DNS 변조 체크");
         content.add(new Shutdown(), "종료 타이머");
         content.add(new VideoFinder(), "동영상 파일 찾기");
+        content.add(new BlueScreen(), "블루스크린");
         cardLayout.show(content, "empty");
 
         root.add(topBar, BorderLayout.NORTH);
@@ -126,7 +127,7 @@ public class MainFrame extends JFrame {
         sidebar.add(makeMenuButton("💾", "하드디스크"));
         sidebar.add(makeMenuButton("🖥️", "시스템 정보"));
         sidebar.add(makeMenuButton("\uD83D\uDD50", "컴퓨터 사용시간"));
-        sidebar.add(makeMenuButton("🛑", "블루스크린 로그"));
+        sidebar.add(makeMenuButton("🛑", "블루스크린"));
 
         sidebar.add(Box.createVerticalStrut(8));
 
