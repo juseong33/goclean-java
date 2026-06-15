@@ -1,4 +1,5 @@
 import panels.Info.Uptime;
+import panels.etc.Shutdown;
 import panels.network.DnsCheck;
 import panels.system.SystemInfo;
 import panels.clean.*;
@@ -51,6 +52,7 @@ public class MainFrame extends JFrame {
         content.add(new PrivacyDelete(), "개인정보 삭제");
         content.add(new ForceDelete(), "파일 강제 삭제");
         content.add(new DnsCheck(), "DNS 변조 체크");
+        content.add(new Shutdown(), "종료 타이머");
         cardLayout.show(content, "empty");
 
         root.add(topBar, BorderLayout.NORTH);
