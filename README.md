@@ -14,7 +14,7 @@
 |--------------|--|
 | 서비스 관리       | ✅ |
 | 프로세스 관리      | ✅ |
-| 시작 프로그램 관리   | - |
+| 시작 프로그램 관리   | ✅ |
 | 작업 스케줄러 관리   | - |
 | 하드디스크 상태 점검  | - |
 | 하드디스크 사용시간   | - |
@@ -61,6 +61,26 @@
 - 본인 프로세스(자바 앱)와 명령어를 실행 중인 `powershell` 자신은 항상 제외
 - 종료 후 종료된 프로세스 수와 소요 시간을 로그에 표시
 - "예외처리 방법" 버튼을 누르면 종료 대상에서 제외되는 기본/예외 프로세스 목록을 확인 가능
+
+</details>
+
+<details>
+<summary>시작 프로그램 관리</summary>
+
+| 항목 | 명령어 |
+|---|---|
+| 시작 프로그램 목록 조회 | `Get-CimInstance Win32_StartupCommand \| Sort-Object Name` |
+| 시작 프로그램 삭제 (HKLM) | `Remove-ItemProperty -Path 'HKLM:\SOFTWARE\...\Run' -Name '프로그램명'` |
+| 시작 프로그램 삭제 (HKCU) | `Remove-ItemProperty -Path 'HKCU:\SOFTWARE\...\Run' -Name '프로그램명'` |
+| 폴더 열기 | `explorer.exe /select,"실행파일경로"` |
+
+- 부팅 시 자동 실행되는 프로그램 목록을 백그라운드(`SwingWorker`)에서 비동기로 로드
+- `Win32_StartupCommand`는 HKLM/HKCU/WOW6432Node 등 여러 위치를 동시에 조회하므로, 이름 기준으로 중복 제거(`HashSet`) 후 표시
+- "열기" 버튼 클릭 시 해당 프로그램의 실행 파일이 있는 폴더를 탐색기로 열고 파일을 선택 상태로 표시 (`/select,` 옵션)
+- `%windir%`, `%APPDATA%` 등 환경변수가 포함된 경로는 자동으로 실제 경로로 치환 후 탐색기 실행
+- 체크박스로 항목 선택 후 삭제 시 레지스트리에서 해당 항목만 제거 (프로그램 자체는 삭제되지 않음)
+- `Location` 값을 그대로 변환하여 정확한 레지스트리 경로(WOW6432Node 포함)로 삭제 처리
+- 삭제 완료 후 목록 자동 갱신
 
 </details>
 
