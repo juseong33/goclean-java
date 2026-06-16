@@ -12,7 +12,7 @@
 
 | 기능           | 상태 |
 |--------------|--|
-| 서비스 관리       | - |
+| 서비스 관리       | ✅ |
 | 프로세스 관리      | ✅ |
 | 시작 프로그램 관리   | - |
 | 작업 스케줄러 관리   | - |
@@ -30,6 +30,39 @@
 | CPU/그래픽카드 온도 | ❌ |
 
 ## 기능별 사용 명령어
+
+<details>
+<summary>서비스 관리</summary>
+
+| 항목 | 명령어 |
+|---|---|
+| 서비스 목록 조회 | `Get-CimInstance Win32_Service \| Where-Object { $p = ($_.PathName -replace '"','').Trim(); ($p -notlike 'C:\Windows*') -and ($p -notlike '%SystemRoot%*') } \| Sort-Object DisplayName` |
+| 서비스 실행 | `Start-Service -Name '서비스명'` |
+| 서비스 중지 | `Stop-Service -Name '서비스명' -Force` |
+
+- `C:\Windows` 및 `%SystemRoot%` 경로에 있는 윈도우 내장 서비스는 목록에서 제외
+- 서비스 목록을 백그라운드(`SwingWorker`)에서 비동기로 로드
+- 서비스명 또는 설명을 기준으로 실시간 검색 (`DocumentListener`)
+- 서비스 실행/중지는 관리자 권한이 필요하며, 권한 없이 시도하면 경고 팝업 표시
+- 실행/중지 완료 후 목록 자동 새로고침
+
+</details>
+
+<details>
+<summary>프로세스 관리</summary>
+
+| 항목 | 명령어 |
+|---|---|
+| CPU/메모리/프로세스 수 조회 | `(Get-CimInstance Win32_PerfFormattedData_PerfOS_Processor \| Where-Object {$_.Name -eq '_Total'}).PercentProcessorTime` / `Get-CimInstance Win32_OperatingSystem` / `(Get-Process).Count` |
+| 프로세스 종료 | `Get-Process \| Where-Object { $_.ProcessName -notin @(화이트리스트) } \| ForEach-Object { Stop-Process -Id $_.Id -Force -ErrorAction SilentlyContinue }` |
+
+- CPU 사용률, 실제 메모리 사용률, 실행 중인 프로세스 수를 1초마다 갱신 (`javax.swing.Timer` + `SwingWorker`)
+- "윈도우 프로세스 초기화" 버튼 클릭 시 확인 팝업 후, 기본 프로세스/백신/메신저를 제외한 모든 프로세스를 강제 종료
+- 본인 프로세스(자바 앱)와 명령어를 실행 중인 `powershell` 자신은 항상 제외
+- 종료 후 종료된 프로세스 수와 소요 시간을 로그에 표시
+- "예외처리 방법" 버튼을 누르면 종료 대상에서 제외되는 기본/예외 프로세스 목록을 확인 가능
+
+</details>
 
 <details>
 <summary>시스템 정보</summary>
@@ -50,6 +83,23 @@
 </details>
 
 <details>
+<summary>동영상 파일 찾기</summary>
+
+| 항목 | 명령어 |
+|---|---|
+| 폴더 열기 (파일 선택) | `explorer.exe /select,"파일경로"` |
+
+- "찾을 파일" 콤보박스에서 동영상/음악(2MB 이상)/대용량(50MB 이상)/엑셀/파워포인트/Ms워드/한글/Pdf/Psd/Zip 중 선택
+- "드라이브" 콤보박스에서 검색할 드라이브 선택 (전체 드라이브 선택 시 모든 드라이브 탐색)
+- 선택한 조건에 맞는 파일을 백그라운드(`SwingWorker`)에서 디렉토리 재귀 탐색하며 찾는 즉시 테이블에 추가 (경로, 파일명, 폴더 열기, 크기, 만든 날짜)
+- 접근 권한이 없는 폴더는 건너뜀
+- 검색 중에는 로그에 "검색 중." → "검색 중.." → "검색 중..."처럼 점이 늘어나는 애니메이션 표시, 완료 시 발견 개수 표시
+- "폴더 열기" 버튼을 누르면 해당 파일이 있는 폴더를 탐색기로 열고 파일을 선택 상태로 표시
+- 테이블은 자체 스크롤만 사용하며, 한 화면 안에 모든 UI가 들어오도록 구성
+
+</details>
+
+<details>
 <summary>컴퓨터 사용시간</summary>
 
 | 항목 | 명령어 |
@@ -60,6 +110,34 @@
 - `EventID 6006`: 시스템 종료 (꺼진시간)
 - 최근 30일치만 조회, 내림차순 정렬
 - 자정을 넘긴 세션은 날짜 기준으로 분할하여 집계
+
+</details>
+
+<details>
+<summary>블루스크린</summary>
+
+| 항목 | 명령어 |
+|---|---|
+| 블루스크린(BSOD) 기록 조회 | `Get-WinEvent -FilterHashtable @{LogName='System'; ProviderName='Microsoft-Windows-WER-SystemErrorReporting'; Id=1001; StartTime=$start}` |
+
+- 최근 3개월치 블루스크린 발생 기록을 내림차순으로 조회
+- 이벤트 메시지에서 정규식(`0x[0-9a-fA-F]{8}`)으로 버그 체크 코드를 추출
+- 추출한 코드를 미리 정의된 표(버그 체크 문자열, 추정 원인)와 매칭하여 테이블에 표시 (발생 시간, 버그 체크 문자열, 버그 코드, 원인(추정))
+- 매칭되는 코드가 없으면 "알 수 없음"으로 표시
+- 하단에 블루스크린 발생 횟수 표시
+
+</details>
+
+<details>
+<summary>파일 강제 삭제</summary>
+
+| 항목 | 명령어 |
+|---|---|
+| 파일 강제 삭제 | `Remove-Item -LiteralPath '경로' -Force -Recurse -ErrorAction SilentlyContinue` |
+
+- 파일 탐색기(`JFileChooser`)에서 다중 선택한 파일을 목록에 추가
+- 체크된 항목만 백그라운드(`SwingWorker`)에서 순차 강제 삭제
+- 삭제 후 파일 존재 여부를 다시 확인하여 성공/실패를 로그에 출력, 성공한 항목은 목록에서 제거
 
 </details>
 
@@ -85,34 +163,6 @@
 </details>
 
 <details>
-<summary>파일 강제 삭제</summary>
-
-| 항목 | 명령어 |
-|---|---|
-| 파일 강제 삭제 | `Remove-Item -LiteralPath '경로' -Force -Recurse -ErrorAction SilentlyContinue` |
-
-- 파일 탐색기(`JFileChooser`)에서 다중 선택한 파일을 목록에 추가
-- 체크된 항목만 백그라운드(`SwingWorker`)에서 순차 강제 삭제
-- 삭제 후 파일 존재 여부를 다시 확인하여 성공/실패를 로그에 출력, 성공한 항목은 목록에서 제거
-
-</details>
-
-<details>
-<summary>DNS 변조 체크</summary>
-
-| 항목 | 명령어 |
-|---|---|
-| 기본/보조 DNS 조회 | `(Get-DnsClientServerAddress -AddressFamily IPv4 \| Where-Object { $_.ServerAddresses.Count -gt 0 } \| Select-Object -First 1).ServerAddresses` |
-| 주요 사이트 IP 조회 (현재 DNS) | `(Resolve-DnsName 도메인 -Type A -ErrorAction SilentlyContinue).IPAddress` |
-| 주요 사이트 IP 조회 (공용 DNS) | `(Resolve-DnsName 도메인 -Type A -Server 8.8.8.8 -ErrorAction SilentlyContinue).IPAddress` |
-
-- 국민은행(`www.kbstar.com`), 우리은행(`www.wooribank.com`)의 IP를 현재 DNS와 공용 DNS(8.8.8.8) 양쪽에서 조회
-- 두 결과에 겹치는 IP가 하나라도 있으면 정상연결, 없으면 변조 의심, 조회 실패 시 연결실패로 표시
-- 접속 환경에 따라 정상이어도 변조 의심으로 표시될 수 있음을 화면에 안내 문구로 표시
-
-</details>
-
-<details>
 <summary>종료 타이머</summary>
 
 | 항목 | 명령어 |
@@ -128,50 +178,17 @@
 </details>
 
 <details>
-<summary>동영상 파일 찾기</summary>
+<summary>DNS 변조 체크</summary>
 
 | 항목 | 명령어 |
 |---|---|
-| 폴더 열기 (파일 선택) | `explorer.exe /select,"파일경로"` |
+| 기본/보조 DNS 조회 | `(Get-DnsClientServerAddress -AddressFamily IPv4 \| Where-Object { $_.ServerAddresses.Count -gt 0 } \| Select-Object -First 1).ServerAddresses` |
+| 주요 사이트 IP 조회 (현재 DNS) | `(Resolve-DnsName 도메인 -Type A -ErrorAction SilentlyContinue).IPAddress` |
+| 주요 사이트 IP 조회 (공용 DNS) | `(Resolve-DnsName 도메인 -Type A -Server 8.8.8.8 -ErrorAction SilentlyContinue).IPAddress` |
 
-- "찾을 파일" 콤보박스에서 동영상/음악(2MB 이상)/대용량(50MB 이상)/엑셀/파워포인트/Ms워드/한글/Pdf/Psd/Zip 중 선택
-- "드라이브" 콤보박스에서 검색할 드라이브 선택 (전체 드라이브 선택 시 모든 드라이브 탐색)
-- 선택한 조건에 맞는 파일을 백그라운드(`SwingWorker`)에서 디렉토리 재귀 탐색하며 찾는 즉시 테이블에 추가 (경로, 파일명, 폴더 열기, 크기, 만든 날짜)
-- 접근 권한이 없는 폴더는 건너뜀
-- 검색 중에는 로그에 "검색 중." → "검색 중.." → "검색 중..."처럼 점이 늘어나는 애니메이션 표시, 완료 시 발견 개수 표시
-- "폴더 열기" 버튼을 누르면 해당 파일이 있는 폴더를 탐색기로 열고 파일을 선택 상태로 표시
-- 테이블은 자체 스크롤만 사용하며, 한 화면 안에 모든 UI가 들어오도록 구성
-
-</details>
-
-<details>
-<summary>블루스크린</summary>
-
-| 항목 | 명령어 |
-|---|---|
-| 블루스크린(BSOD) 기록 조회 | `Get-WinEvent -FilterHashtable @{LogName='System'; ProviderName='Microsoft-Windows-WER-SystemErrorReporting'; Id=1001; StartTime=$start}` |
-
-- 최근 3개월치 블루스크린 발생 기록을 내림차순으로 조회
-- 이벤트 메시지에서 정규식(`0x[0-9a-fA-F]{8}`)으로 버그 체크 코드를 추출
-- 추출한 코드를 미리 정의된 표(버그 체크 문자열, 추정 원인)와 매칭하여 테이블에 표시 (발생 시간, 버그 체크 문자열, 버그 코드, 원인(추정))
-- 매칭되는 코드가 없으면 "알 수 없음"으로 표시
-- 하단에 블루스크린 발생 횟수 표시
-
-</details>
-
-<details>
-<summary>프로세스 관리</summary>
-
-| 항목 | 명령어 |
-|---|---|
-| CPU/메모리/프로세스 수 조회 | `(Get-CimInstance Win32_PerfFormattedData_PerfOS_Processor \| Where-Object {$_.Name -eq '_Total'}).PercentProcessorTime` / `Get-CimInstance Win32_OperatingSystem` / `(Get-Process).Count` |
-| 프로세스 종료 | `Get-Process \| Where-Object { $_.ProcessName -notin @(화이트리스트) } \| ForEach-Object { Stop-Process -Id $_.Id -Force -ErrorAction SilentlyContinue }` |
-
-- CPU 사용률, 실제 메모리 사용률, 실행 중인 프로세스 수를 1초마다 갱신 (`javax.swing.Timer` + `SwingWorker`)
-- "윈도우 프로세스 초기화" 버튼 클릭 시 확인 팝업 후, 기본 프로세스/백신/메신저를 제외한 모든 프로세스를 강제 종료
-- 본인 프로세스(자바 앱)와 명령어를 실행 중인 `powershell` 자신은 항상 제외
-- 종료 후 종료된 프로세스 수와 소요 시간을 로그에 표시
-- "예외처리 방법" 버튼을 누르면 종료 대상에서 제외되는 기본/예외 프로세스 목록을 확인 가능
+- 국민은행(`www.kbstar.com`), 우리은행(`www.wooribank.com`)의 IP를 현재 DNS와 공용 DNS(8.8.8.8) 양쪽에서 조회
+- 두 결과에 겹치는 IP가 하나라도 있으면 정상연결, 없으면 변조 의심, 조회 실패 시 연결실패로 표시
+- 접속 환경에 따라 정상이어도 변조 의심으로 표시될 수 있음을 화면에 안내 문구로 표시
 
 </details>
 
