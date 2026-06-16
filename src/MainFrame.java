@@ -56,6 +56,7 @@ public class MainFrame extends JFrame {
         content.add(new VideoFinder(), "동영상 파일 찾기");
         content.add(new BlueScreen(), "블루스크린");
         content.add(new ProcessInit(), "프로세스 관리");
+        content.add(new ServiceMng(), "서비스 관리");
         cardLayout.show(content, "empty");
 
         root.add(topBar, BorderLayout.NORTH);
