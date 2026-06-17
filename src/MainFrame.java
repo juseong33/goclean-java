@@ -47,18 +47,30 @@ public class MainFrame extends JFrame {
         content.add(emptyPanel, "empty");
 
         // 각 기능 패널들 등록
-        content.add(new SystemInfo(), "시스템 정보");
-        content.add(new Uptime(), "컴퓨터 사용시간");
-        content.add(new PrivacyDelete(), "개인정보 삭제");
-        content.add(new ForceDelete(), "파일 강제 삭제");
-        content.add(new DnsCheck(), "DNS 변조 체크");
-        content.add(new Shutdown(), "종료 타이머");
-        content.add(new VideoFinder(), "동영상 파일 찾기");
-        content.add(new BlueScreen(), "블루스크린");
-        content.add(new ProcessInit(), "프로세스 관리");
+
+        // 시스템
         content.add(new ServiceMng(), "서비스 관리");
         content.add(new StartUpMng(), "시작 프로그램 관리");
         content.add(new TaskScheduler(), "작업 스케줄러 관리");
+        content.add(new ProcessInit(), "프로세스 관리");
+
+        // 청소
+        content.add(new PrivacyDelete(), "개인정보 삭제");
+        content.add(new ForceDelete(), "파일 강제 삭제");
+
+        // 정보
+        content.add(new HardDisk(), "하드디스크");
+        content.add(new SystemInfo(), "시스템 정보");
+        content.add(new Uptime(), "컴퓨터 사용시간");
+        content.add(new BlueScreen(), "블루스크린");
+
+        // 네트워크
+        content.add(new DnsCheck(), "DNS 변조 체크");
+
+        //기타
+        content.add(new Shutdown(), "종료 타이머");
+        content.add(new VideoFinder(), "동영상 파일 찾기");
+
         cardLayout.show(content, "empty");
 
         root.add(topBar, BorderLayout.NORTH);
