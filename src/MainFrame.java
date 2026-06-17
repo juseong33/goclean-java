@@ -58,6 +58,7 @@ public class MainFrame extends JFrame {
         content.add(new ProcessInit(), "프로세스 관리");
         content.add(new ServiceMng(), "서비스 관리");
         content.add(new StartUpMng(), "시작 프로그램 관리");
+        content.add(new TaskScheduler(), "작업 스케줄러 관리");
         cardLayout.show(content, "empty");
 
         root.add(topBar, BorderLayout.NORTH);
