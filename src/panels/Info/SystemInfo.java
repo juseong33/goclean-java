@@ -1,4 +1,4 @@
-package panels.system;
+package panels.Info;
 
 import panels.BasePanel;
 import util.CmdUtil;
