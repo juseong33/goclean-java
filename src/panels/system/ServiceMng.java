@@ -35,13 +35,11 @@ public class ServiceMng extends BasePanel {
         allServices = new ArrayList<>();
         displayedServices = new ArrayList<>();
 
-        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        contentPanel.setLayout(new BorderLayout(0, 10));
 
         // 검색 행
         JPanel topRow = new JPanel(new BorderLayout(8, 0));
         topRow.setBackground(Color.WHITE);
-        topRow.setAlignmentX(Component.LEFT_ALIGNMENT);
-        topRow.setMaximumSize(new Dimension(Integer.MAX_VALUE, 36));
 
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 0));
         searchPanel.setBackground(Color.WHITE);
@@ -77,8 +75,7 @@ public class ServiceMng extends BasePanel {
         topRow.add(searchPanel, BorderLayout.WEST);
         topRow.add(refreshBtn, BorderLayout.EAST);
 
-        contentPanel.add(topRow);
-        contentPanel.add(Box.createVerticalStrut(10));
+        // topRow는 initUI 마지막에 BorderLayout.NORTH로 추가됨
 
         // 테이블
         String[] columns = {"서비스명", "상태", "시작유형", "설명"};
@@ -97,6 +94,7 @@ public class ServiceMng extends BasePanel {
         serviceTable.setIntercellSpacing(new Dimension(0, 0));
         serviceTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         serviceTable.setFillsViewportHeight(true);
+        serviceTable.setPreferredScrollableViewportSize(new Dimension(0, 200));
 
         JTableHeader tableHeader = serviceTable.getTableHeader();
         tableHeader.setFont(new Font("맑은 고딕", Font.BOLD, 12));
@@ -104,11 +102,13 @@ public class ServiceMng extends BasePanel {
         tableHeader.setForeground(new Color(80, 80, 100));
         tableHeader.setPreferredSize(new Dimension(0, 32));
 
-        serviceTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        serviceTable.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
         serviceTable.getColumnModel().getColumn(0).setPreferredWidth(200);
+        serviceTable.getColumnModel().getColumn(0).setMaxWidth(200);
         serviceTable.getColumnModel().getColumn(1).setPreferredWidth(60);
+        serviceTable.getColumnModel().getColumn(1).setMaxWidth(60);
         serviceTable.getColumnModel().getColumn(2).setPreferredWidth(80);
-        serviceTable.getColumnModel().getColumn(3).setPreferredWidth(600);
+        serviceTable.getColumnModel().getColumn(2).setMaxWidth(80);
         // 상태 열: 실행중=초록, 중지=회색
         serviceTable.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
             @Override
@@ -133,20 +133,12 @@ public class ServiceMng extends BasePanel {
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         tableScroll.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 225)));
-        tableScroll.setAlignmentX(Component.LEFT_ALIGNMENT);
-        tableScroll.setPreferredSize(new Dimension(600, 300));
-        tableScroll.setMaximumSize(new Dimension(Integer.MAX_VALUE, 300));
         tableScroll.getVerticalScrollBar().setUnitIncrement(16);
         tableScroll.getHorizontalScrollBar().setUnitIncrement(16);
-
-        contentPanel.add(tableScroll);
-        contentPanel.add(Box.createVerticalStrut(12));
 
         // 버튼 행
         JPanel btnRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
         btnRow.setBackground(Color.WHITE);
-        btnRow.setAlignmentX(Component.LEFT_ALIGNMENT);
-        btnRow.setMaximumSize(new Dimension(Integer.MAX_VALUE, 42));
 
         startBtn = makeButton("▶  실행");
         startBtn.setPreferredSize(new Dimension(110, 34));
@@ -161,7 +153,9 @@ public class ServiceMng extends BasePanel {
         btnRow.add(startBtn);
         btnRow.add(stopBtn);
 
-        contentPanel.add(btnRow);
+        contentPanel.add(topRow,      BorderLayout.NORTH);
+        contentPanel.add(tableScroll, BorderLayout.CENTER);
+        contentPanel.add(btnRow,      BorderLayout.SOUTH);
 
         loadServices();
     }
