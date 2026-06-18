@@ -190,18 +190,18 @@ public class StartUpMng extends BasePanel {
             return;
         }
 
+        if (!CmdUtil.isAdmin()) {
+            JOptionPane.showMessageDialog(this,
+                    "시작 프로그램을 삭제하려면 관리자 권한이 필요합니다.\n프로그램을 관리자 권한으로 실행해 주세요.",
+                    "권한 부족", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
         int confirm = JOptionPane.showConfirmDialog(this,
                 "선택한 " + rows.size() + "개의 시작 프로그램을 삭제하시겠습니까?",
                 "시작 프로그램 삭제", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.NO_OPTION)
             return;
-
-        // 관리자 권한 없이도 HKCU 항목은 삭제 가능하지만, HKLM 항목은 관리자 권한 필요
-        if (!CmdUtil.isAdmin()) {
-            JOptionPane.showMessageDialog(this,
-                    "시작 프로그램을 삭제하려면 관리자 권한이 필요할 수 있습니다.\n프로그램을 관리자 권한으로 실행해 주세요.",
-                    "권한 부족", JOptionPane.WARNING_MESSAGE);
-        }
 
         // 테이블 행 번호로 allStartups에서 삭제 대상 데이터 추출
         List<String[]> toDelete = new ArrayList<>();
