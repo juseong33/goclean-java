@@ -152,18 +152,18 @@ public class TaskScheduler extends BasePanel {
             return;
         }
 
-        int confirm = JOptionPane.showConfirmDialog(this,
-                "선택한 " + rows.size() + "개의 작업 스케줄러를 삭제하시겠습니까?",
-                "작업 스케줄러 삭제", JOptionPane.YES_NO_OPTION);
-        if (confirm == JOptionPane.NO_OPTION)
-            return;
-
         if (!CmdUtil.isAdmin()) {
             JOptionPane.showMessageDialog(this,
                     "작업 스케줄러를 삭제하려면 관리자 권한이 필요합니다.\n프로그램을 관리자 권한으로 실행해 주세요.",
                     "권한 부족", JOptionPane.WARNING_MESSAGE);
             return;
         }
+
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "선택한 " + rows.size() + "개의 작업 스케줄러를 삭제하시겠습니까?",
+                "작업 스케줄러 삭제", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.NO_OPTION)
+            return;
 
         List<String[]> toDelete = new ArrayList<>();    // 삭제할 항목들을 담음
         for (int row : rows)
