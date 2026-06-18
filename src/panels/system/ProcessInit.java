@@ -204,7 +204,7 @@ public class ProcessInit extends BasePanel {
         int confirm = JOptionPane.showConfirmDialog(this,
                 "기본 프로세스와 백신/메신저를 제외한 모든 프로세스를 종료합니다.\n계속하시겠습니까?",
                 "프로세스 초기화", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-        if (confirm == JOptionPane.WARNING_MESSAGE)
+        if (confirm != JOptionPane.YES_OPTION)
             return;
 
         clearLog();
