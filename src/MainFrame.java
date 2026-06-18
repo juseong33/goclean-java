@@ -17,7 +17,7 @@ public class MainFrame extends JFrame {
         setTitle("GoClean with Java");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(850, 720);
-        setMinimumSize(new Dimension(850, 720));
+        setResizable(false);        // 사용자가 창 크기를 변경할 수 없게 설정
         setLocationRelativeTo(null);
 
         buildUI();
