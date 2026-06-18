@@ -56,7 +56,7 @@ public class PrivacyDelete extends BasePanel {
                         "Remove-Item -Path 'HKCU:\\Software\\Microsoft\\Internet Explorer\\TypedURLsTime' -Recurse -Force -ErrorAction SilentlyContinue"));
 
         items.add(new CleanItem("실행 목록 삭제",
-                "Remove-Item -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\RunMRU\\*' -Force -ErrorAction SilentlyContinue"));
+                "reg delete \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\RunMRU\" /va /f"));
         items.add(new CleanItem("최근 열어본 문서 목록 삭제",
                 "Remove-Item -Path \"$env:APPDATA\\Microsoft\\Windows\\Recent\\*\" -Recurse -Force -ErrorAction SilentlyContinue; " +
                         "Remove-Item -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\RecentDocs\\*' -Recurse -Force -ErrorAction SilentlyContinue"));
