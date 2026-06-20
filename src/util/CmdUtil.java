@@ -4,13 +4,12 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-//Windows 명령어를 처리하는 유틸 (ProcessBuilder 이용)
 public class CmdUtil {
     public static String run(String command) {
         StringBuilder sb = new StringBuilder();
         try {
-            ProcessBuilder pb = new ProcessBuilder("powershell", "-NoProfile", "-Command", command);    // wmic은 Windows11부터는 지원하지 않는다고 해서 powershell로 수정
-            pb.redirectErrorStream(true);   // stdout과 stderr를 하나의 스트림으로 합쳐서 읽기
+            ProcessBuilder pb = new ProcessBuilder("powershell", "-NoProfile", "-Command", command);
+            pb.redirectErrorStream(true);
             Process process = pb.start();
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader(process.getInputStream(), "MS949"));
@@ -20,12 +19,11 @@ public class CmdUtil {
             }
             process.waitFor();
         } catch (Exception e) {
-            sb.append("[오류] ").append(e.getMessage());
+            sb.append("[Error] ").append(e.getMessage());
         }
         return sb.toString().trim();
     }
 
-    // 명령어 실행 후 결과를 줄 단위 리스트로 반환 (빈 줄 제외)
     public static List<String> runLines(String command) {
         List<String> lines = new ArrayList<>();
         for (String line : run(command).split("\n")) {
@@ -36,7 +34,6 @@ public class CmdUtil {
         return lines;
     }
 
-    // 관리자 권한 여부 확인
     public static boolean isAdmin() {
         try {
             ProcessBuilder pb = new ProcessBuilder("cmd", "/c", "net session");
@@ -51,7 +48,6 @@ public class CmdUtil {
         }
     }
 
-    // 바이트 -> 읽기 쉬운 단위로 변환 (예: 1.2 MB)
     public static String formatSize(long bytes) {
         if (bytes < 0) return "-";
         if (bytes < 1024) return bytes + " B";

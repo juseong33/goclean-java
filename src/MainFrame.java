@@ -17,59 +17,47 @@ public class MainFrame extends JFrame {
         setTitle("GoClean with Java");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(850, 720);
-        setResizable(false);        // 사용자가 창 크기를 변경할 수 없게 설정
+        setResizable(false);
         setLocationRelativeTo(null);
 
         buildUI();
 
-//      setVisible(true); main 함수에서 호출하도록 변경
     }
 
     private void buildUI() {
         JPanel root = new JPanel(new BorderLayout());
         setContentPane(root);
 
-        // 상단 바
         JPanel topBar = buildTopBar();
 
-        // 왼쪽 사이드바
         JPanel sidebar = buildSidebar();
 
-        // 오른쪽 컨텐츠
-        // 새 창(JFrame)을 띄워서 각 기능들을 구현보다 CardLayout(패널만 교체)로 구현
         cardLayout = new CardLayout();
         content = new JPanel(cardLayout);
         content.setBackground(Color.WHITE);
 
-        // 빈 화면 (시작 화면)
         JPanel emptyPanel = new JPanel();
         emptyPanel.setBackground(Color.WHITE);
         content.add(emptyPanel, "empty");
 
-        // 각 기능 패널들 등록
 
-        // 시스템
-        content.add(new ServiceMng(), "서비스 관리");
-        content.add(new StartUpMng(), "시작 프로그램 관리");
-        content.add(new TaskScheduler(), "작업 스케줄러 관리");
-        content.add(new ProcessInit(), "프로세스 관리");
+        content.add(new ServiceMng(), "Service Manager");
+        content.add(new StartUpMng(), "Startup Manager");
+        content.add(new TaskScheduler(), "Task Scheduler");
+        content.add(new ProcessInit(), "Process Manager");
 
-        // 청소
-        content.add(new PrivacyDelete(), "개인정보 삭제");
-        content.add(new ForceDelete(), "파일 강제 삭제");
+        content.add(new PrivacyDelete(), "Privacy Cleanup");
+        content.add(new ForceDelete(), "Force Delete");
 
-        // 정보
-        content.add(new HardDisk(), "하드디스크");
-        content.add(new SystemInfo(), "시스템 정보");
-        content.add(new Uptime(), "컴퓨터 사용시간");
-        content.add(new BlueScreen(), "블루스크린");
+        content.add(new HardDisk(), "Hard Disk");
+        content.add(new SystemInfo(), "System Info");
+        content.add(new Uptime(), "Uptime");
+        content.add(new BlueScreen(), "Blue Screen");
 
-        // 네트워크
-        content.add(new DnsCheck(), "DNS 변조 체크");
+        content.add(new DnsCheck(), "DNS Check");
 
-        //기타
-        content.add(new Shutdown(), "종료 타이머");
-        content.add(new VideoFinder(), "동영상 파일 찾기");
+        content.add(new Shutdown(), "Shutdown Timer");
+        content.add(new VideoFinder(), "Video Finder");
 
         cardLayout.show(content, "empty");
 
@@ -84,25 +72,23 @@ public class MainFrame extends JFrame {
         topbar.setPreferredSize(new Dimension(0, 46));
         topbar.setBorder(new EmptyBorder(0, 16, 0, 16));
 
-        // 프로그램 이름 (좌측)
         JLabel programNameLabel = new JLabel("Goclean with Java");
-        programNameLabel.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+        programNameLabel.setFont(new Font("Malgun Gothic", Font.BOLD, 15));
         programNameLabel.setForeground(new Color(255, 255, 255));
 
-        // 학번 - 이름 - 학수번호 (우측)
         JPanel infoPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 13));
         infoPanel.setBackground(new Color(40, 40, 40));
 
         JLabel idLabel = new JLabel("12245625");
-        idLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
+        idLabel.setFont(new Font("Malgun Gothic", Font.PLAIN, 13));
         idLabel.setForeground(new Color(170, 170, 170));
 
         JLabel nameLabel = new JLabel("JuseongPark");
-        nameLabel.setFont(new Font("맑은 고딕", Font.BOLD, 13));
+        nameLabel.setFont(new Font("Malgun Gothic", Font.BOLD, 13));
         nameLabel.setForeground(new Color(204, 204, 204));
 
         JLabel codeLabel = new JLabel("CSE2107-003");
-        codeLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
+        codeLabel.setFont(new Font("Malgun Gothic", Font.PLAIN, 13));
         codeLabel.setForeground(new Color(170, 170, 170));
 
         infoPanel.add(idLabel);
@@ -122,52 +108,46 @@ public class MainFrame extends JFrame {
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
         sidebar.setBorder(new EmptyBorder(12, 0, 12, 0));
 
-        // 시스템
-        sidebar.add(makeCategoryLabel("  시스템"));
-        sidebar.add(makeMenuButton("\uD83D\uDD27", "서비스 관리"));  //이모지 크기 때문에 text 여백이 생기는 문제가 있다..
-        sidebar.add(makeMenuButton("🚀", "시작 프로그램 관리"));
-        sidebar.add(makeMenuButton("📅", "작업 스케줄러 관리"));
-        sidebar.add(makeMenuButton("📊", "프로세스 관리"));
+        sidebar.add(makeCategoryLabel("  System"));
+        sidebar.add(makeMenuButton("🔧", "Service Manager"));
+        sidebar.add(makeMenuButton("🚀", "Startup Manager"));
+        sidebar.add(makeMenuButton("📅", "Task Scheduler"));
+        sidebar.add(makeMenuButton("📊", "Process Manager"));
 
         sidebar.add(Box.createVerticalStrut(8));
 
-        // 청소
-        sidebar.add(makeCategoryLabel("  청소"));
-        sidebar.add(makeMenuButton("🔒", "개인정보 삭제"));
-        sidebar.add(makeMenuButton("❌", "파일 강제 삭제"));
+        sidebar.add(makeCategoryLabel("  Cleanup"));
+        sidebar.add(makeMenuButton("🔒", "Privacy Cleanup"));
+        sidebar.add(makeMenuButton("❌", "Force Delete"));
 
         sidebar.add(Box.createVerticalStrut(8));
 
-        // 정보
-        sidebar.add(makeCategoryLabel("  정보"));
-        sidebar.add(makeMenuButton("💾", "하드디스크"));
-        sidebar.add(makeMenuButton("🖥️", "시스템 정보"));
-        sidebar.add(makeMenuButton("\uD83D\uDD50", "컴퓨터 사용시간"));
-        sidebar.add(makeMenuButton("🛑", "블루스크린"));
+        sidebar.add(makeCategoryLabel("  Info"));
+        sidebar.add(makeMenuButton("💾", "Hard Disk"));
+        sidebar.add(makeMenuButton("🖥️", "System Info"));
+        sidebar.add(makeMenuButton("🕐", "Uptime"));
+        sidebar.add(makeMenuButton("🛑", "Blue Screen"));
 
         sidebar.add(Box.createVerticalStrut(8));
 
-        // 네트워크
-        sidebar.add(makeCategoryLabel("  네트워크"));
-        sidebar.add(makeMenuButton("🌐", "DNS 변조 체크"));
+        sidebar.add(makeCategoryLabel("  Network"));
+        sidebar.add(makeMenuButton("🌐", "DNS Check"));
 
         sidebar.add(Box.createVerticalStrut(8));
 
-        // 기타
-        sidebar.add(makeCategoryLabel("  기타"));
-        sidebar.add(makeMenuButton("🎬", "동영상 파일 찾기"));
-        sidebar.add(makeMenuButton("🕘", "종료 타이머"));
+        sidebar.add(makeCategoryLabel("  Etc"));
+        sidebar.add(makeMenuButton("🎬", "Video Finder"));
+        sidebar.add(makeMenuButton("🕘", "Shutdown Timer"));
 
         sidebar.add(Box.createVerticalGlue());
 
         return sidebar;
     }
 
-    // 카테고리 헤더 라벨 (클릭 안 됨)
     private JLabel makeCategoryLabel(String text) {
         JLabel label = new JLabel(text);
 
-        label.setFont(new Font("맑은 고딕", Font.BOLD, 11));
+        label.setFont(new Font("Malgun Gothic", Font.BOLD, 11));
         label.setForeground(new Color(150, 150, 160));
         label.setMaximumSize(new Dimension(Integer.MAX_VALUE, 28));
         label.setBorder(new EmptyBorder(4, 8, 2, 0));
@@ -175,29 +155,24 @@ public class MainFrame extends JFrame {
         return label;
     }
 
-    // 메뉴 버튼 (클릭 됨)
-    //이모지와 텍스트를 하나의 JLabel에 넣으면 폰트가 하나만 적용되어 이모지가 깨지는 문제가 있음
-    //이모지용 JLabel (Segoe UI Emoji 폰트) + 텍스트용 JLabel (맑은 고딕 폰트)를 분리한 뒤 JButton에 결합하여 해결
     private JButton makeMenuButton(String emoji, String text) {
         JButton btn = new JButton();
         btn.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         btn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 38));
         btn.setHorizontalAlignment(SwingConstants.LEFT);
-        btn.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
+        btn.setFont(new Font("Malgun Gothic", Font.PLAIN, 13));
         btn.setForeground(new Color(50, 50, 60));
         btn.setBackground(new Color(245, 246, 250));
         btn.setBorderPainted(false);
         btn.setFocusPainted(false);
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-        // 이모지 라벨
         JLabel iconLabel = new JLabel(emoji);
         iconLabel.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 14));
         iconLabel.setBorder(new EmptyBorder(0, 20, 0, 8));
 
-        // 텍스트 라벨
         JLabel textLabel = new JLabel(text);
-        textLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
+        textLabel.setFont(new Font("Malgun Gothic", Font.PLAIN, 13));
         textLabel.setForeground(new Color(50, 50, 60));
 
         btn.add(iconLabel);

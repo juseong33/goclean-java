@@ -27,51 +27,47 @@ public class VideoFinder extends BasePanel {
     private int searchingDots;
 
     public VideoFinder() {
-        super("파일 찾기", "다양한 확장자의 파일을 컴퓨터에서 찾습니다.");
+        super("File Finder", "Find files of various extensions on your computer.");
     }
 
     @Override
     protected void initUI() {
         contentPanel.setLayout(new BorderLayout(0, 16));
 
-        // 상단: 찾을 파일 종류 / 드라이브 선택 / 검색하기 버튼
         JPanel topPanel = new JPanel(new BorderLayout(16, 0));
         topPanel.setBackground(Color.WHITE);
 
         JPanel optionRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 4));
         optionRow.setBackground(Color.WHITE);
 
-        // 찾을 파일 종류
-        JLabel fileLabel = new JLabel("찾을 파일:");
-        fileLabel.setFont(new Font("맑은 고딕", Font.BOLD, 13));
+        JLabel fileLabel = new JLabel("File Type:");
+        fileLabel.setFont(new Font("Malgun Gothic", Font.BOLD, 13));
 
         fileTypeCombo = new JComboBox<>(new String[]{
-                "동영상파일", "음악파일(2MB이상 크기)", "대용량 파일(50MB이상 크기)",
-                "엑셀파일", "파워포인트", "Ms워드", "한글(Hwp)",
-                "Pdf파일", "Psd파일", "Zip파일"
+                "Video Files", "Audio Files (2MB+)", "Large Files (50MB+)",
+                "Excel Files", "PowerPoint", "MS Word", "Hangul (Hwp)",
+                "PDF Files", "PSD Files", "Zip Files"
         });
-        fileTypeCombo.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
+        fileTypeCombo.setFont(new Font("Malgun Gothic", Font.PLAIN, 13));
 
-        // 드라이브 선택
-        JLabel driveLabel = new JLabel("드라이브:");
-        driveLabel.setFont(new Font("맑은 고딕", Font.BOLD, 13));
+        JLabel driveLabel = new JLabel("Drive:");
+        driveLabel.setFont(new Font("Malgun Gothic", Font.BOLD, 13));
 
         List<String> driveItems = new ArrayList<>();
-        driveItems.add("전체 드라이브");
+        driveItems.add("All Drives");
         for (File root : File.listRoots())
-            driveItems.add(root.getPath()); // 연결된 드라이브가 문자열로 반환되어 List에 추가
+            driveItems.add(root.getPath());
 
         driveCombo = new JComboBox<>(driveItems.toArray(new String[0]));
-        driveCombo.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
+        driveCombo.setFont(new Font("Malgun Gothic", Font.PLAIN, 13));
 
         optionRow.add(fileLabel);
         optionRow.add(fileTypeCombo);
         optionRow.add(driveLabel);
         optionRow.add(driveCombo);
 
-        // 검색하기 버튼
-        searchBtn = new JButton("검색하기");
-        searchBtn.setFont(new Font("맑은 고딕", Font.BOLD, 16));
+        searchBtn = new JButton("Search");
+        searchBtn.setFont(new Font("Malgun Gothic", Font.BOLD, 16));
         searchBtn.setForeground(new Color(200, 30, 30));
         searchBtn.setBackground(Color.WHITE);
         searchBtn.setFocusPainted(false);
@@ -83,10 +79,8 @@ public class VideoFinder extends BasePanel {
         topPanel.add(optionRow, BorderLayout.CENTER);
         topPanel.add(searchBtn, BorderLayout.EAST);
 
-        // 검색 결과 테이블
-        String[] columns = {"경로", "파일명", "폴더 열기", "크기", "만든 날짜"};
+        String[] columns = {"Path", "File Name", "Open Folder", "Size", "Date Created"};
         tableModel = new DefaultTableModel(columns, 0) {
-            // 폴더 열기 버튼이 있는 열만 클릭 가능하게 함
             @Override
             public boolean isCellEditable(int row, int col) {
                 return col == 2;
@@ -94,9 +88,9 @@ public class VideoFinder extends BasePanel {
         };
 
         table = new JTable(tableModel);
-        table.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
+        table.setFont(new Font("Malgun Gothic", Font.PLAIN, 13));
         table.setRowHeight(28);
-        table.getTableHeader().setFont(new Font("맑은 고딕", Font.BOLD, 13));
+        table.getTableHeader().setFont(new Font("Malgun Gothic", Font.BOLD, 13));
         table.setGridColor(new Color(220, 220, 225));
         table.setSelectionBackground(new Color(230, 232, 245));
         table.getColumnModel().getColumn(0).setPreferredWidth(180);
@@ -115,8 +109,6 @@ public class VideoFinder extends BasePanel {
         contentPanel.add(topPanel, BorderLayout.NORTH);
         contentPanel.add(tableScroll, BorderLayout.CENTER);
 
-        // 전체 패널 스크롤은 없애고, 테이블 내부 스크롤만 사용하도록
-        // 바깥 스크롤뷰의 높이에 맞춰 테이블 뷰포트 높이를 매번 재계산
         JScrollPane outerScroll = (JScrollPane) SwingUtilities.getAncestorOfClass(JScrollPane.class, contentPanel);
         if (outerScroll != null) {
             outerScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
@@ -125,9 +117,9 @@ public class VideoFinder extends BasePanel {
             outerScroll.addComponentListener(new ComponentAdapter() {
                 @Override
                 public void componentResized(ComponentEvent e) {
-                    int padding = 40;   // contentPanel 상하 여백 합
-                    int gap = 16;       // contentPanel BorderLayout 행간 여백
-                    int bottomMargin = 24; // 테이블과 로그 영역 사이 여백 (좌우 여백과 동일)
+                    int padding = 40;
+                    int gap = 16;
+                    int bottomMargin = 24;
                     int available = outerScroll.getHeight() - padding - gap - bottomMargin - topPanel.getPreferredSize().height;
 
                     if (available > 0) {
@@ -139,13 +131,12 @@ public class VideoFinder extends BasePanel {
         }
     }
 
-    // 검색 시작
     private void search() {
         String fileType = (String) fileTypeCombo.getSelectedItem();
         String drive = (String) driveCombo.getSelectedItem();
 
         List<File> roots = new ArrayList<>();
-        if ("전체 드라이브".equals(drive))
+        if ("All Drives".equals(drive))
             roots.addAll(Arrays.asList(File.listRoots()));
         else
             roots.add(new File(drive));
@@ -154,8 +145,7 @@ public class VideoFinder extends BasePanel {
         clearLog();
         searchBtn.setEnabled(false);
 
-        // 검색 중임을 알 수 있도록 "검색 중." -> "검색 중.." -> "검색 중..." 형태로 갱신
-        String searchingMessage = "▶ " + fileType + " 검색 중";
+        String searchingMessage = "▶ Searching " + fileType;
         log(searchingMessage);
 
         searchingDots = 0;
@@ -169,7 +159,6 @@ public class VideoFinder extends BasePanel {
         new SearchWorker(roots, fileType).execute();
     }
 
-    // 디렉토리를 재귀적으로 탐색하며 조건에 맞는 파일을 찾는 백그라운드 작업
     private class SearchWorker extends SwingWorker<Void, Object[]> {
         private final List<File> roots;
         private final String fileType;
@@ -196,7 +185,7 @@ public class VideoFinder extends BasePanel {
 
             File[] files = dir.listFiles();
             if (files == null)
-                return;  // 접근 권한이 없는 폴더는 건너뜀
+                return;
 
             for (File file : files) {
                 if (isCancelled())
@@ -205,36 +194,35 @@ public class VideoFinder extends BasePanel {
                 if (file.isDirectory())
                     searchDir(file);
                 else if (matches(file))
-                    publish(new Object[]{file.getParent(), file.getName(), "열기",
+                    publish(new Object[]{file.getParent(), file.getName(), "Open",
                             CmdUtil.formatSize(file.length()), dateFormat.format(new Date(file.lastModified()))});
             }
         }
 
-        // 선택한 파일 종류 기준으로 파일이 조건에 맞는지 확인
         private boolean matches(File file) {
             String name = file.getName().toLowerCase();
             long size = file.length();
 
             switch (fileType) {
-                case "동영상파일":
+                case "Video Files":
                     return hasExt(name, "mp4", "avi", "mkv", "mov", "wmv", "flv");
-                case "음악파일(2MB이상 크기)":
+                case "Audio Files (2MB+)":
                     return hasExt(name, "mp3", "wav", "flac", "aac", "ogg") && size >= 2L * 1024 * 1024;
-                case "대용량 파일(50MB이상 크기)":
+                case "Large Files (50MB+)":
                     return size >= 50L * 1024 * 1024;
-                case "엑셀파일":
+                case "Excel Files":
                     return hasExt(name, "xls", "xlsx");
-                case "파워포인트":
+                case "PowerPoint":
                     return hasExt(name, "ppt", "pptx");
-                case "Ms워드":
+                case "MS Word":
                     return hasExt(name, "doc", "docx");
-                case "한글(Hwp)":
+                case "Hangul (Hwp)":
                     return hasExt(name, "hwp");
-                case "Pdf파일":
+                case "PDF Files":
                     return hasExt(name, "pdf");
-                case "Psd파일":
+                case "PSD Files":
                     return hasExt(name, "psd");
-                case "Zip파일":
+                case "Zip Files":
                     return hasExt(name, "zip", "rar", "7z");
                 default:
                     return false;
@@ -258,16 +246,15 @@ public class VideoFinder extends BasePanel {
         protected void done() {
             searchingTimer.stop();
             clearLog();
-            log("▶ 검색 완료 (" + tableModel.getRowCount() + "개 발견)");
+            log("▶ Search complete (" + tableModel.getRowCount() + " found)");
             searchBtn.setEnabled(true);
         }
     }
 
-    // "폴더 열기" 버튼 표시용
     private static class ButtonRenderer extends JButton implements TableCellRenderer {
         ButtonRenderer() {
-            setText("열기");
-            setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+            setText("Open");
+            setFont(new Font("Malgun Gothic", Font.PLAIN, 12));
             setFocusPainted(false);
         }
 
@@ -277,20 +264,19 @@ public class VideoFinder extends BasePanel {
         }
     }
 
-    // "폴더 열기" 버튼 클릭 시 해당 파일이 있는 폴더를 탐색기로 열고 파일을 선택해줌
     private static class ButtonEditor extends DefaultCellEditor {
         private final JButton button;
         private String filePath;
 
         ButtonEditor() {
             super(new JCheckBox());
-            button = new JButton("열기");
-            button.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+            button = new JButton("Open");
+            button.setFont(new Font("Malgun Gothic", Font.PLAIN, 12));
             button.setFocusPainted(false);
             button.addActionListener(e -> {
                 fireEditingStopped();
                 if (filePath != null)
-                    CmdUtil.run("explorer.exe /select,\"" + filePath + "\"");   // select를 이용해 폴더에 파일이 선택 되게 설정
+                    CmdUtil.run("explorer.exe /select,\"" + filePath + "\"");
             });
         }
 
@@ -304,7 +290,7 @@ public class VideoFinder extends BasePanel {
 
         @Override
         public Object getCellEditorValue() {
-            return "열기";
+            return "Open";
         }
     }
 }
